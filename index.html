@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --sky:#bfe3ff;
+    --pink:#ff7aa2;
+    --curtain:#8b0000;
+    --curtain-shadow:#5c0000;
+  }
+
+  /* White heart cursor */
+  html, body, * {
+    cursor: url('data:image/svg+xml;utf8,\
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 64 64">\
+      <path d="M32 56s-2.5-2-11.7-9.2C10 39.8 4 33.6 4 25.6 4 18.4 9.5 13 16.5 13c4.2 0 8 2.1 10.3 5.4C29 15.1 32.8 13 37 13 44 13 49.5 18.4 49.5 25.6c0 8-6 14.2-16.3 21.2C34.5 54 32 56 32 56Z" fill="%23ffffff" stroke="%23cfcfcf" stroke-width="2" />\
+    </svg>') 4 2, auto;
+  }
+
+  body{
+    margin:0;
+    min-height:100svh;
+    background-color: var(--sky);
+    background-image:
+      radial-gradient(120% 80% at 20% 10%, rgba(255,255,255,0.18), rgba(255,255,255,0.02) 60%, transparent 70%),
+      radial-gradient(120% 80% at 80% 30%, rgba(255,255,255,0.14), transparent 65%),
+      repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.08) 0px,
+        rgba(255,255,255,0.08) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+    background-size:
+      140% 120%,
+      140% 120%,
+      8px 8px;
+    background-position:
+      0% 0%,
+      100% 20%,
+      0 0;
+    animation: breeze 60s linear infinite;
+    overflow:hidden;
+    font-family: "Great Vibes", cursive, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @keyframes breeze {
+    0% {   background-position: 0% 0%,   100% 20%, 0 0; }
+    50%{   background-position: 40% 30%,  60% 40%, -10px -10px; }
+    100%{  background-position: 0% 0%,   100% 20%, 0 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+
+  /* Falling emoji container */
+  .confetti-layer{
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .confetti{
+    position: absolute;
+    top: -10%;
+    will-change: transform, opacity;
+    animation: fall var(--dur, 6s) linear var(--delay, 0s) infinite;
+    filter: drop-shadow(0 2px 1px rgba(0,0,0,0.15));
+    user-select: none;
+  }
+
+  @keyframes fall{
+    0%   { transform: translate(var(--x, 0), -12vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translate(var(--xend, 0), 110vh) rotate(540deg); opacity: .95; }
+  }
+
+  header{
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: clamp(16px, 3vw, 28px);
+    margin-top: 20px;
+    color: var(--pink);
+    text-shadow:
+      0 2px 0 rgba(255,255,255,0.8),
+      0 2px 8px rgba(255, 105, 180, .25),
+      0 3px 6px rgba(0,0,0,0.2);
+    font-size: clamp(28px, 6vw, 72px);
+  }
+
+  /* Button */
+  .center{
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+  }
+  button#reveal{
+    font-family: "Great Vibes", cursive, sans-serif;
+    font-size: clamp(24px, 4vw, 40px);
+    padding: .6em 1.2em;
+    border-radius: 999px;
+    border: none;
+    background: white;
+    box-shadow: 0 10px 24px rgba(0,0,0,.15);
+    transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+  }
+  button#reveal:hover{
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 14px 28px rgba(0,0,0,.18);
+  }
+  button#reveal.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  /* Curtains (20% slower) */
+  .curtains{
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .panel{
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 52%;
+    background:
+      radial-gradient(120% 100% at 15% 50%, rgba(255,255,255,.14), transparent 45%),
+      radial-gradient(120% 100% at 85% 50%, rgba(255,255,255,.10), transparent 40%),
+      repeating-linear-gradient(90deg,
+        rgba(0,0,0,.28) 0px,
+        rgba(0,0,0,.28) 6px,
+        rgba(255,255,255,.05) 6px,
+        rgba(255,255,255,.05) 14px,
+        rgba(0,0,0,.18) 14px,
+        rgba(0,0,0,.18) 26px,
+        rgba(255,255,255,.04) 26px,
+        rgba(255,255,255,.04) 40px
+      ),
+      linear-gradient(90deg, var(--curtain-shadow), var(--curtain) 28%, var(--curtain-shadow));
+    transform: translateX(var(--start));
+    transition: transform 2.16s ease-in-out;
+    background-blend-mode: multiply, screen, normal, normal;
+  }
+  .panel.left  { left: 0; --start: -110%; --end: 0%; box-shadow: inset -14px 0 32px rgba(0,0,0,.5); }
+  .panel.right { right: 0; --start: 110%;  --end: 0%; box-shadow: inset 14px 0 32px rgba(0,0,0,.5); }
+
+  .curtains.close .panel{  transform: translateX(var(--end)); }
+  .curtains.reopen .panel{ transform: translateX(var(--start)); }
+
+  /* Video container under curtains */
+  .video-wrap{
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .45s ease .2s;
+    pointer-events: none;
+  }
+  .video-wrap.visible{
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .video{
+    width: min(90vw, 960px);
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 18px 46px rgba(0,0,0,.35);
+  }
+
+  /* Corner tag */
+  .corner-tag {
+    position: fixed;
+    bottom: 14px;
+    right: 18px;
+    font-family: "Great Vibes", cursive, sans-serif;
+    font-size: 28px;
+    color: var(--pink);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 5;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="confetti-layer" id="confetti"></div>
+
+  <header>Happy Birthday My Love, My Meredith</header>
+
+  <div class="center">
+    <button id="reveal">click me</button>
+  </div>
+
+  <div class="curtains" id="curtains" aria-hidden="true">
+    <div class="panel left"></div>
+    <div class="panel right"></div>
+  </div>
+
+  <div class="video-wrap" id="videoWrap" aria-hidden="true">
+    <iframe
+      id="videoFrame"
+      class="video"
+      src=""
+      title="Birthday Video"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <div class="corner-tag">
+    💌 From Max
+  </div>
+
+<script>
+  // -------- Confetti --------
+  (function(){
+    const layer = document.getElementById('confetti');
+    const items = ['❤️','💖','💕','25','🎉'];
+    const MAX_AT_ONCE = 80;
+    let speedMult = 1;
+    let paused = false;
+
+    function spawn() {
+      if (paused || layer.children.length > MAX_AT_ONCE) return;
+
+      const el = document.createElement('span');
+      el.className = 'confetti';
+      el.textContent = items[Math.floor(Math.random()*items.length)];
+
+      const size = Math.random()*1.2 + 2.0;
+      const left = Math.random()*100;
+      const drift = (Math.random()*60 - 30);
+      const dur = (Math.random()*3 + 4) * speedMult;
+      const delay = Math.random()*1;
+
+      el.style.left = left + 'vw';
+      el.style.fontSize = size + 'rem';
+      el.style.setProperty('--x', '0vw');
+      el.style.setProperty('--xend', drift + 'vw');
+      el.style.setProperty('--dur', dur + 's');
+      el.style.setProperty('--delay', delay + 's');
+
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), (dur + delay) * 1000 + 500);
+    }
+
+    for (let i = 0; i < 40; i++) setTimeout(spawn, i * 80);
+    setInterval(spawn, 120);
+
+    window.__slowConfetti = () => { speedMult = 10; };
+    window.__pauseConfetti = () => { paused = true; };
+  })();
+
+  // -------- Curtains + Video reveal --------
+  (function(){
+    const btn = document.getElementById('reveal');
+    const curtains = document.getElementById('curtains');
+    const videoWrap = document.getElementById('videoWrap');
+    const videoFrame = document.getElementById('videoFrame');
+    const VIDEO_URL = `https://drive.google.com/file/d/1xC7L5hHKWGwJDYGpZvor7QRv84lbvDMh/preview`;
+    let revealedOnce = false;
+
+    btn.addEventListener('click', () => {
+      btn.classList.add('hidden');
+      setTimeout(() => { btn.style.display = 'none'; }, 220);
+
+      curtains.classList.remove('reopen');
+      curtains.classList.add('close');
+
+      setTimeout(() => {
+        if (!revealedOnce) {
+          videoFrame.src = VIDEO_URL;
+          videoWrap.classList.add('visible');
+          revealedOnce = true;
+
+          // Pause confetti when clicking inside video
+          videoFrame.addEventListener('click', () => {
+            if (typeof window.__pauseConfetti === 'function') window.__pauseConfetti();
+          });
+        }
+        curtains.classList.add('reopen');
+
+        setTimeout(() => {
+          curtains.classList.remove('close');
+          curtains.classList.remove('reopen');
+          if (typeof window.__slowConfetti === 'function') window.__slowConfetti();
+        }, 2160);
+      }, 2160);
+    });
+  })();
+</script>
+</body>
+</html>
